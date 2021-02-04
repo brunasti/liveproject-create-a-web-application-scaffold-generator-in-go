@@ -1,4 +1,4 @@
-# liveproject-create-a-web-application-scaffold-generator-in-go
+liveproject-create-a-web-application-scaffold-generator-in-go
 ---
 
 
@@ -53,4 +53,34 @@ If any of the required options are missing, it will print an error message:
 In this milestone, you lay the foundations of the command-line application. You set up the command-line interface that the user will interact with, and add appropriate validation to ensure that the user is informed when they have not specified any required data. You will write code which uses the Input/Output interface, and write tests which can test the program’s standard output.
 
 In Milestone 3, you will extend this application to generate the web application scaffold that you will create in Milestone 2.
+
+
+
+# Project implementation
+
+## Setup Env
+
+### Create github repository
+
+### Create project in GoLand linked to the github repository
+
+### Initiate a module main in the project
+From terminal, in the project directory, execute the command:
+
+    go mod init main
+
+### Create main.go 
+
+
+### Compile the app and get the executable
+From terminal, in the project directory, execute the command:
+
+    go build -o scaffold-gen
+
+If you have not previously created the module with the 
+"go mod init main" command you will get an error message like:
+
+    go: cannot find main module, but found .git/config in /Users/admin/work/go/Manning/liveProject/liveproject-create-a-web-application-scaffold-generator-in-go
+        to create a module there, run:
+        go mod init
 
