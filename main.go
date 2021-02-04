@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"os"
 )
 
 func main() {
@@ -15,6 +17,13 @@ func main() {
 	         Project remote repository URL
 	   -s    Project will have static assets or not
 	*/
+
+	type projectStructureType struct {
+		Name          string
+		Path          string
+		RepositoryURL string
+		StaticAssets  bool
+	}
 
 	projectLocation := flag.String("d", "", "Project location on disk")
 	projectName := flag.String("n", "", "Project name")
@@ -44,6 +53,30 @@ func main() {
 		return
 	}
 
-	fmt.Println("Generating scaffold for project", *projectName, "in", *projectLocation)
+	var projectStruct projectStructureType
+
+	projectStruct.Name = *projectName
+	projectStruct.Path = *projectLocation
+	projectStruct.RepositoryURL = *remoteRepositoryURL
+	projectStruct.StaticAssets = *staticAssets
+
+	fmt.Println("------------")
+	fmt.Println(projectStruct)
+	fmt.Println("------------")
+	bytes, err := json.Marshal(projectStruct)
+	exitOnError(err)
+
+	fmt.Println(string(bytes))
+	fmt.Println("------------")
+
+	fmt.Println("Generating scaffold for project", projectStruct.Name, "in", *projectLocation)
 	fmt.Println("  with repository", *remoteRepositoryURL, "and static assets", *staticAssets)
+}
+
+// exitOnError prints any errors and exits.
+func exitOnError(err error) {
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
