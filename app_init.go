@@ -6,14 +6,14 @@ import (
 	"os"
 )
 
-type projectStructureType struct {
-	Name          string
-	Path          string
-	RepositoryURL string
-	StaticAssets  bool
+type ProjectStructureType struct {
+	Name          string `json:"name"`
+	Path          string `json:"location"`
+	RepositoryURL string `json:"repository"`
+	StaticAssets  bool   `json:"static"`
 }
 
-func app_init() projectStructureType {
+func app_init(args []string) *ProjectStructureType {
 
 	/*
 	   -d string
@@ -25,21 +25,21 @@ func app_init() projectStructureType {
 	   -s    Project will have static assets or not
 	*/
 
-	var projectStruct projectStructureType
+	var flagSet = flag.NewFlagSet("params", flag.ContinueOnError)
+	var projectStruct = ProjectStructureType{}
 
-	projectStructPath := flag.String("d", "", "Project location on disk")
-	projectStructName := flag.String("n", "", "Project name")
-	projectStructRepositoryURL := flag.String("r", "", "Project remote repository URL")
-	projectStructStaticAssets := flag.Bool("s", false, "Project will have static assets or not")
-	verbose := flag.Bool("v", false, "verbose")
+	flagSet.StringVar(&projectStruct.Path, "d", "", "Project location on disk")
+	flagSet.StringVar(&projectStruct.Name, "n", "", "Project name")
+	flagSet.StringVar(&projectStruct.RepositoryURL, "r", "", "Project remote repository URL")
+	flagSet.BoolVar(&projectStruct.StaticAssets, "s", false, "Project will have static assets or not")
+	flagSet.BoolVar(&appLogVerbose, "v", false, "verbose")
 
-	flag.Parse()
+	err := flagSet.Parse(args)
 
-	projectStruct.Path = *projectStructPath
-	projectStruct.Name = *projectStructName
-	projectStruct.RepositoryURL = *projectStructRepositoryURL
-	projectStruct.StaticAssets = *projectStructStaticAssets
-	appLogVerbose = *verbose
+	if err != nil {
+		// TODO Handle exit for error
+		fmt.Println(err)
+	}
 
 	flagError := false
 
@@ -62,5 +62,5 @@ func app_init() projectStructureType {
 		os.Exit(2)
 	}
 
-	return projectStruct
+	return &projectStruct
 }
