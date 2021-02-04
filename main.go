@@ -2,12 +2,23 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"os"
 )
 
+var appLogVerbose bool
+
 func main() {
+
+	//type ProjectStructureType struct {
+	//	Name          string
+	//	Path          string
+	//	RepositoryURL string
+	//	StaticAssets  bool
+	//}
+	//
+	//var projectStruct ProjectStructureType
+
 	/*
 	   -d string
 	         Project location on disk
@@ -18,59 +29,64 @@ func main() {
 	   -s    Project will have static assets or not
 	*/
 
-	type projectStructureType struct {
-		Name          string
-		Path          string
-		RepositoryURL string
-		StaticAssets  bool
-	}
-
-	projectLocation := flag.String("d", "", "Project location on disk")
-	projectName := flag.String("n", "", "Project name")
-	remoteRepositoryURL := flag.String("r", "", "Project remote repository URL")
-	staticAssets := flag.Bool("s", false, "Project will have static assets or not")
-
-	flag.Parse()
-
-	flagError := false
-
-	if *projectName == "" {
-		fmt.Println("Project name cannot be empty")
-		flagError = true
-	}
-
-	if *projectLocation == "" {
-		fmt.Println("Project path cannot be empty")
-		flagError = true
-	}
-
-	if *remoteRepositoryURL == "" {
-		fmt.Println("Project repository URL cannot be empty")
-		flagError = true
-	}
-
-	if flagError {
-		return
-	}
+	//type projectStructureType struct {
+	//	Name          string
+	//	Path          string
+	//	RepositoryURL string
+	//	StaticAssets  bool
+	//}
 
 	var projectStruct projectStructureType
 
-	projectStruct.Name = *projectName
-	projectStruct.Path = *projectLocation
-	projectStruct.RepositoryURL = *remoteRepositoryURL
-	projectStruct.StaticAssets = *staticAssets
+	//projectStructPath := flag.String("d", "", "Project location on disk")
+	//projectStructName := flag.String("n", "", "Project name")
+	//projectStructRepositoryURL := flag.String("r", "", "Project remote repository URL")
+	//projectStructStaticAssets := flag.Bool("s", false, "Project will have static assets or not")
+	//
+	//flag.Parse()
+	//
+	//fmt.Println("Name ", projectStructName)
+	//
+	//projectStruct.Path = *projectStructPath
+	//projectStruct.Name = *projectStructName
+	//projectStruct.RepositoryURL = *projectStructRepositoryURL
+	//projectStruct.StaticAssets = *projectStructStaticAssets
+	//
+	//fmt.Println("ARGS ", flag.Args())
+	//
+	//
+	//flagError := false
+	//
+	//if projectStruct.Name == "" {
+	//	fmt.Println("Project name cannot be empty")
+	//	flagError = true
+	//}
+	//
+	//if projectStruct.Path == "" {
+	//	fmt.Println("Project path cannot be empty")
+	//	flagError = true
+	//}
+	//
+	//if projectStruct.RepositoryURL == "" {
+	//	fmt.Println("Project repository URL cannot be empty")
+	//	flagError = true
+	//}
 
-	fmt.Println("------------")
-	fmt.Println(projectStruct)
-	fmt.Println("------------")
-	bytes, err := json.Marshal(projectStruct)
-	exitOnError(err)
+	projectStruct = app_init()
 
-	fmt.Println(string(bytes))
-	fmt.Println("------------")
+	if appLogVerbose {
+		fmt.Println("------------")
+		fmt.Println(projectStruct)
+		fmt.Println("------------")
+		bytes, err := json.Marshal(projectStruct)
+		exitOnError(err)
 
-	fmt.Println("Generating scaffold for project", projectStruct.Name, "in", *projectLocation)
-	fmt.Println("  with repository", *remoteRepositoryURL, "and static assets", *staticAssets)
+		fmt.Println(string(bytes))
+		fmt.Println("------------")
+	}
+
+	fmt.Println("Generating scaffold for project", projectStruct.Name, "in", projectStruct.Path)
+	fmt.Println("  with repository", projectStruct.RepositoryURL, "and static assets", projectStruct.StaticAssets)
 }
 
 // exitOnError prints any errors and exits.
