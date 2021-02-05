@@ -1,25 +1,21 @@
 package main
 
 import (
-	"flag"
+	"fmt"
 	"testing"
 )
 
 func TestAppInit(t *testing.T) {
+	fmt.Println("TestAppInit - 01")
 
 	var args []string
+	fmt.Println("TestAppInit - 02")
 	args = []string{"-d", "name"}
 
-	// ./scaffold-gen -d ./project1 -n Project1 -r github.com/username/project1 -v
+	fmt.Println("TestAppInit - 03", args)
+	//f := flag.NewFlagSet("params", flag.ExitOnError)
+	f := setUpFlags()
+	fmt.Println("TestAppInit - 04", f)
+	//SetConfiguration(args, f)
 
-	//var projectStruct ProjectStructureType
-
-	f := flag.NewFlagSet("params", flag.ExitOnError)
-	setConfiguration(args, f)
-
-	//projectStruct := *AppInit(args)
-	//
-	//if projectStruct == nil {
-	//	t.Errorf("Failed")
-	//}
 }

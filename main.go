@@ -25,7 +25,7 @@ func main() {
 
 func application() {
 	fmt.Println("Scaffold Generator v 1.0 ------------")
-	projectStruct = *setConfiguration(os.Args[1:], &flagSet)
+	projectStruct = *SetConfiguration(os.Args[1:], &flagSet)
 
 	if appLogVerbose {
 		bytes, err := json.Marshal(projectStruct)

@@ -28,12 +28,11 @@ func setUpFlags() flag.FlagSet {
 	return *appFlagSet
 }
 
-func setConfiguration(args []string, flagSet *flag.FlagSet) *ProjectStructureType {
+func SetConfiguration(args []string, flagSet *flag.FlagSet) *ProjectStructureType {
 
 	err := flagSet.Parse(args)
 
 	if err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 
