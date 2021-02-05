@@ -67,7 +67,7 @@ In Milestone 3, you will extend this application to generate the web application
 ### Initiate a module main in the project
 From terminal, in the project directory, execute the command:
 
-    go mod init main
+    go mod init module scaffold_gen
 
 ### Create main.go 
 
@@ -75,12 +75,27 @@ From terminal, in the project directory, execute the command:
 ### Compile the app and get the executable
 From terminal, in the project directory, execute the command:
 
-    go build -o scaffold-gen
+    go build -o scaffold_gen
 
 If you have not previously created the module with the 
-"go mod init main" command you will get an error message like:
+"go mod init scaffold_gen" command you will get an error message like:
 
     go: cannot find main module, but found .git/config in /Users/admin/work/go/Manning/liveProject/liveproject-create-a-web-application-scaffold-generator-in-go
         to create a module there, run:
         go mod init
+
+### Test
+
+From terminal, in the project directory, execute the command:
+
+    go test
+
+The output should report at the end something like:
+
+    PASS
+    ok      scaffold_gen    0.214s
+
+To have more info on the tests execution, add -v as parameter:
+
+    go test -v
 
