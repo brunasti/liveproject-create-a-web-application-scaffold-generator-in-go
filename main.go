@@ -2,19 +2,30 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"os"
 )
 
+type ProjectStructureType struct {
+	Name          string `json:"name"`
+	Path          string `json:"location"`
+	RepositoryURL string `json:"repository"`
+	StaticAssets  bool   `json:"static"`
+}
+
 var appLogVerbose bool
+var projectStruct ProjectStructureType
+var flagSet = flag.FlagSet{}
 
 func main() {
+	flagSet = setUpFlags()
+	application()
+}
 
-	var projectStruct ProjectStructureType
-
+func application() {
 	fmt.Println("Scaffold Generator v 1.0 ------------")
-
-	projectStruct = *app_init(os.Args[1:])
+	projectStruct = *setConfiguration(os.Args[1:], &flagSet)
 
 	if appLogVerbose {
 		bytes, err := json.Marshal(projectStruct)

@@ -6,15 +6,7 @@ import (
 	"os"
 )
 
-type ProjectStructureType struct {
-	Name          string `json:"name"`
-	Path          string `json:"location"`
-	RepositoryURL string `json:"repository"`
-	StaticAssets  bool   `json:"static"`
-}
-
-func app_init(args []string) *ProjectStructureType {
-
+func setUpFlags() flag.FlagSet {
 	/*
 	   -d string
 	         Project location on disk
@@ -25,20 +17,24 @@ func app_init(args []string) *ProjectStructureType {
 	   -s    Project will have static assets or not
 	*/
 
-	var flagSet = flag.NewFlagSet("params", flag.ContinueOnError)
-	var projectStruct = ProjectStructureType{}
+	var appFlagSet = flag.NewFlagSet("params", flag.ContinueOnError)
 
-	flagSet.StringVar(&projectStruct.Path, "d", "", "Project location on disk")
-	flagSet.StringVar(&projectStruct.Name, "n", "", "Project name")
-	flagSet.StringVar(&projectStruct.RepositoryURL, "r", "", "Project remote repository URL")
-	flagSet.BoolVar(&projectStruct.StaticAssets, "s", false, "Project will have static assets or not")
-	flagSet.BoolVar(&appLogVerbose, "v", false, "verbose")
+	appFlagSet.StringVar(&projectStruct.Path, "d", "", "Project location on disk")
+	appFlagSet.StringVar(&projectStruct.Name, "n", "", "Project name")
+	appFlagSet.StringVar(&projectStruct.RepositoryURL, "r", "", "Project remote repository URL")
+	appFlagSet.BoolVar(&projectStruct.StaticAssets, "s", false, "Project will have static assets or not")
+	appFlagSet.BoolVar(&appLogVerbose, "v", false, "verbose")
+
+	return *appFlagSet
+}
+
+func setConfiguration(args []string, flagSet *flag.FlagSet) *ProjectStructureType {
 
 	err := flagSet.Parse(args)
 
 	if err != nil {
-		// TODO Handle exit for error
 		fmt.Println(err)
+		os.Exit(1)
 	}
 
 	flagError := false
