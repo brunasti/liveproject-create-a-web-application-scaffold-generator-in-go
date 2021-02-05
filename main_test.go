@@ -20,20 +20,6 @@ func TestExitOnError(t *testing.T) {
 
 }
 
-//func TestExitOnErrorFail(t *testing.T) {
-//
-//	fmt.Println("TestExitOnErrorFail : =====================")
-//
-//	error := true
-//	err := errors.New("TEST")
-//	exitOnError(err)
-//	if error {
-//		t.Errorf("exitOnError(err) should have killed the app")
-//	}
-//
-//	fmt.Println("TestExitOnErrorFail : ================== end")
-//}
-
 func TestTest(t *testing.T) {
 	errors := 3
 	fmt.Println("TestTest : ==================----")
@@ -46,6 +32,45 @@ func TestTest(t *testing.T) {
 	fmt.Println("TestTest : ================== end")
 }
 
+func TestValidateConfiguration(t *testing.T) {
+	fmt.Println("TestValidateConfiguration : ==================----")
+	t.Run(fmt.Sprintf("should report no errors"), func(t *testing.T) {
+		ps := projectStructureType{
+			Name:          "name",
+			Path:          "path",
+			RepositoryURL: "rep",
+			StaticAssets:  false,
+		}
+
+		res := validateConfiguration(ps)
+
+		if len(res) > 0 {
+			t.Fatalf("Expected 0 errors, but got %d [%v]", len(res), res)
+		}
+	})
+	fmt.Println("TestValidateConfiguration : ================== end")
+}
+
+func TestValidateConfigurationFAIL(t *testing.T) {
+	fmt.Println("TestValidateConfigurationFAIL : ==================----")
+	t.Run(fmt.Sprintf("should report no errors"), func(t *testing.T) {
+		ps := projectStructureType{
+			Name:          "",
+			Path:          "path",
+			RepositoryURL: "rep",
+			StaticAssets:  false,
+		}
+
+		res := validateConfiguration(ps)
+
+		if len(res) == 0 || len(res) > 1 {
+			t.Fatalf("Expected 1 errors, but got %d [%v]", len(res), res)
+		}
+	})
+	fmt.Println("TestValidateConfigurationFAIL : ================== end")
+}
+
+// -----------------------------------------------------------------
 func TestMain(m *testing.M) {
 	// call flag.Parse() here if TestMain uses flags
 	fmt.Println("TESTING : =======================")

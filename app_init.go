@@ -2,8 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"os"
 )
 
 func setUpFlags() flag.FlagSet {
@@ -28,34 +26,24 @@ func setUpFlags() flag.FlagSet {
 	return *appFlagSet
 }
 
-func SetConfiguration(args []string, flagSet *flag.FlagSet) *projectStructureType {
-
-	err := flagSet.Parse(args)
-
-	if err != nil {
-		os.Exit(1)
-	}
-
-	flagError := false
+func validateConfiguration(projectStruct projectStructureType) []string {
+	var errorMessages []string
+	var message string
 
 	if projectStruct.Name == "" {
-		fmt.Println("Project name cannot be empty")
-		flagError = true
+		message = "Project name cannot be empty"
+		errorMessages = append(errorMessages, message)
 	}
 
 	if projectStruct.Path == "" {
-		fmt.Println("Project path cannot be empty")
-		flagError = true
+		message = "Project path cannot be empty"
+		errorMessages = append(errorMessages, message)
 	}
 
 	if projectStruct.RepositoryURL == "" {
-		fmt.Println("Project repository URL cannot be empty")
-		flagError = true
+		message = "Project repository URL cannot be empty"
+		errorMessages = append(errorMessages, message)
 	}
 
-	if flagError {
-		os.Exit(2)
-	}
-
-	return &projectStruct
+	return errorMessages
 }
