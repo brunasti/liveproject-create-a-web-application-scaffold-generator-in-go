@@ -2,21 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"os"
 )
-
-type ProjectStructureType struct {
-	Name          string `json:"name"`
-	Path          string `json:"location"`
-	RepositoryURL string `json:"repository"`
-	StaticAssets  bool   `json:"static"`
-}
-
-var appLogVerbose bool
-var projectStruct ProjectStructureType
-var flagSet = flag.FlagSet{}
 
 func main() {
 	flagSet = setUpFlags()
