@@ -4,7 +4,7 @@ import (
 	"flag"
 )
 
-type ProjectStructureType struct {
+type projectStructureType struct {
 	Name          string `json:"name"`
 	Path          string `json:"location"`
 	RepositoryURL string `json:"repository"`
@@ -12,5 +12,5 @@ type ProjectStructureType struct {
 }
 
 var appLogVerbose bool
-var projectStruct ProjectStructureType
+var projectStruct projectStructureType
 var flagSet = flag.FlagSet{}

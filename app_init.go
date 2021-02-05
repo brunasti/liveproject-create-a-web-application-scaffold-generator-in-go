@@ -28,7 +28,7 @@ func setUpFlags() flag.FlagSet {
 	return *appFlagSet
 }
 
-func SetConfiguration(args []string, flagSet *flag.FlagSet) *ProjectStructureType {
+func SetConfiguration(args []string, flagSet *flag.FlagSet) *projectStructureType {
 
 	err := flagSet.Parse(args)
 
