@@ -15,7 +15,7 @@ func setUpFlags() flag.FlagSet {
 	   -s    Project will have static assets or not
 	*/
 
-	var appFlagSet = flag.NewFlagSet("params", flag.ContinueOnError)
+	var appFlagSet = flag.NewFlagSet(appName, flag.ContinueOnError)
 
 	appFlagSet.StringVar(&projectStruct.Path, "d", "", "Project location on disk")
 	appFlagSet.StringVar(&projectStruct.Name, "n", "", "Project name")
