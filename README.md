@@ -2,12 +2,13 @@ liveproject-create-a-web-application-scaffold-generator-in-go
 ---
 
 
-Manning - liveProject - Create a Web Application Scaffold Generator in Go
+# Manning - liveProject - Create a Web Application Scaffold Generator in Go
 
 
 ## Objective
 
 Create a command-line application which will parse command-line arguments specified by the user. These command-line arguments will allow the user to configure the project name, location on local filesystem, a repository URL, and whether the project will be performing the role of an API backend or a website.
+
 
 ## Workflow
 
@@ -55,24 +56,27 @@ In this milestone, you lay the foundations of the command-line application. You 
 In Milestone 3, you will extend this application to generate the web application scaffold that you will create in Milestone 2.
 
 
-
 # Project implementation
+
 
 ## Setup Env
 
-### Create github repository
 
-### Create project in GoLand linked to the github repository
+## Create github repository
+
+
+## Create project in GoLand
+
+### Link the project to the github repository
+
 
 ### Initiate a module main in the project
 From terminal, in the project directory, execute the command:
 
     go mod init module scaffold_gen
 
-### Create main.go 
-
-
 ### Compile the app and get the executable
+
 From terminal, in the project directory, execute the command:
 
     go build -o scaffold_gen
@@ -98,4 +102,24 @@ The output should report at the end something like:
 To have more info on the tests execution, add -v as parameter:
 
     go test -v
+
+
+## Milestone 1 - Use the Standard Library Packages to Create a Command-Line Application
+
+
+
+## Milestone 2 - Create the Web Applications to Be Used as the Scaffold
+
+In the main project directory there are two subdirectory containing 
+the applications for both the static and the handler web systems:
+
+- handler
+- static
+
+In both subdirectories you can build the relative application with the "go build" 
+command and test it with the "go test" one.
+
+
+## Milestone 3 - 
+
 
