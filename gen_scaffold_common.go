@@ -10,9 +10,6 @@ func generateScaffoldCommon(structureType projectStructureType) int {
 	writeFile("./"+structureType.Path+"/handlers/go.mod", goModTmpl)
 	writeFile("./"+structureType.Path+"/handlers/handlers.go", handlerGoTmpl)
 
-	//t, _ := template.ParseFiles("handlers/constants.go")
-	//t.Execute(w, structureType.Name)
-	//writeFile("./"+structureType.Path+"/handlers/constants.go", constantsGoTmpl)
 	writeTemplate("handlers/constants.go", "./"+structureType.Path+"/handlers/constants.go", structureType.Name)
 
 	return 0
@@ -22,11 +19,6 @@ var goModTmpl = `module brunasti.it/handlers
 
 go 1.16
 `
-
-//var constantsGoTmpl = `package main
-//
-//const appName = "{{ . }}"
-//`
 
 var handlerGoTmpl = `package main
 
@@ -38,7 +30,7 @@ import (
 
 func handlers(writer http.ResponseWriter, request *http.Request) {
 	log.Printf("/ [%v]\n", request.URL.Path[1:])
-	n, err := fmt.Fprintf(writer, "Hello World, %s!", request.URL.Path[1:])
+	n, err := fmt.Fprintf(writer, "Hello World, from %s! - [%s]", appName, request.URL.Path[1:])
 	if err != nil {
 		log.Printf("/ [%v] - Error processing [%v][%d]\n", request.URL.Path[1:], err, n)
 	}

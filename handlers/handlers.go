@@ -8,7 +8,7 @@ import (
 
 func handler(writer http.ResponseWriter, request *http.Request) {
 	log.Printf("/ [%v]\n", request.URL.Path[1:])
-	n, err := fmt.Fprintf(writer, "Hello World, %s!", request.URL.Path[1:])
+	n, err := fmt.Fprintf(writer, "Hello World, from %s! - [%s]", appName, request.URL.Path[1:])
 	if err != nil {
 		log.Printf("/ [%v] - Error processing [%v][%d]\n", request.URL.Path[1:], err, n)
 	}
