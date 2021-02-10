@@ -120,6 +120,60 @@ In both subdirectories you can build the relative application with the "go build
 command and test it with the "go test" one.
 
 
-## Milestone 3 - 
+
+## Milestone 3 - Update the Command-Line Application to Generate the Web Application Scaffold
+
+### Objective
+
+In this milestone, you will update the command-line application you wrote in Milestone 1 to generate the scaffold web application. The key work you will do in this milestone is to insert the templated versions of the web applications you constructed in Milestone 2 as strings in your code, and then render the customized templates to files (See Notes for an example).
+
+### Workflow
+
+Create the following functions in the main package:
+- Write a new function to create the directory structure for the web applications. 
+  For both categories of web applications, you will create the handlers subdirectory 
+  inside the user-specified location. For the web application for the website, 
+  create an additional subdirectory static with two subdirectories inside it, 
+  js and css. Let’s call this function createScaffoldDirs.
+- Write a new function to create and generate the following files: go.mod, server.go, handlers/setup.go, handlers/index.go, and handlers/healthcheck.go with the rendered contents. This step will be common for both the web application categories. Let’s call this function generateScaffoldCommon().
+- Write a new function to generate the following files: static/js/index.js and static/css/styles.css. Let’s call this function generateScaffoldStatic().
+
+Update the generateScaffold() function you wrote in Milestone 1 to call the functions createScaffoldDirs() and generateScaffoldCommon(). If the scaffold is being generated for a website, call the generateScaffoldStatic() function
+
+### Deliverable
+
+At the end of this milestone, you will have a command-line application which will generate a customized web application scaffold that you created in Milestone 2.
+
+Assume that scaffold-gen is the name of the built application. First, we will not specify the -s flag:
+
+    $ ./scaffold-gen -d ./project1 -n Project1 -r github.com/username/project1
+    Generating scaffold for project Project1 in ./project1
+
+Then, by navigating to the ./project1 directory, you should be able to run the web application using go run server.go. In a separate terminal/command-line window, use cURL to make requests to the web application:
+
+    $ curl localhost:8080
+    Hello, world!
+
+HealthCheck call:
+
+    $ curl localhost:8080/healthcheck
+    ok
+
+When a -s is specified, it will generate the scaffold for a website:
+
+    $ ./scaffold-gen -d ./project2 -n Project2 -r github.com/username/project2  -s
+
+    Generating scaffold for project Project2 in ./project2
+
+Then, by navigating to the ./project2 directory, you should be able to run the web application using go run server.go. In a separate terminal/command-line window, use cURL to make requests to the web application:
+
+    $ curl localhost:8080
+    <html> <head> <title>This is the homepage for project MyProject2</title><link rel="stylesheet" href="static/css/styles.css" />&lt;script>&lt;/script></head><body> <h1>Hello, World!</h1> </body></html> 
+
+HealthCheck call:
+
+    $ curl localhost:8080/healthcheck
+    ok
+
 
 
