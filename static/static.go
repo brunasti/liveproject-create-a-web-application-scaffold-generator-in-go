@@ -10,22 +10,20 @@ func serveContent(writer http.ResponseWriter, request *http.Request) {
 	log.Printf("[%v]\n", request.URL.Path)
 	p := request.URL.Path
 	if p == "/" {
-		p = "./public/index.html"
+		p = "./statics/index.html"
 	} else {
-		p = "./public" + p
+		p = "./statics" + p
 	}
 
 	log.Printf("Serving content [%v]\n", p)
 	http.ServeFile(writer, request, p)
 }
 
-func main() {
+func Application() {
 	fmt.Println(appName + " ------------")
 
 	mux := http.NewServeMux()
-
 	mux.HandleFunc("/healthcheck", healthCheck)
-
 	mux.HandleFunc("/", serveContent)
 
 	server := &http.Server{
@@ -37,8 +35,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(appName + " -------- end")
 
+	fmt.Println(appName + " -------- end")
+}
+
+func main() {
+	Application()
 }
 
 func healthCheck(writer http.ResponseWriter, request *http.Request) {

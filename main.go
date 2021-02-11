@@ -40,7 +40,7 @@ func application(projectStruct projectStructureType) int {
 	}
 
 	fmt.Println("Generating scaffold for project", projectStruct.Name, "in", projectStruct.Path)
-	logVerbose(fmt.Sprintf("  with repository %s and static assets %v", projectStruct.RepositoryURL, projectStruct.StaticAssets))
+	logVerbose(fmt.Sprintf("  with repository %s and statics assets %v", projectStruct.RepositoryURL, projectStruct.StaticAssets))
 
 	res := createScaffoldDirs(projectStruct)
 	res = generateScaffoldCommon(projectStruct)

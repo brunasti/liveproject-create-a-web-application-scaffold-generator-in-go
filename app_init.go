@@ -12,15 +12,18 @@ func setUpFlags() flag.FlagSet {
 	         Project name
 	   -r string
 	         Project remote repository URL
-	   -s    Project will have static assets or not
+	   -s    Project will have statics assets or not
+	   -p string
+	         Project port
 	*/
 
 	var appFlagSet = flag.NewFlagSet(appName, flag.ContinueOnError)
 
 	appFlagSet.StringVar(&projectStruct.Path, "d", "", "Project location on disk")
+	appFlagSet.StringVar(&projectStruct.Port, "p", "8080", "Project port")
 	appFlagSet.StringVar(&projectStruct.Name, "n", "", "Project name")
 	appFlagSet.StringVar(&projectStruct.RepositoryURL, "r", "", "Project remote repository URL")
-	appFlagSet.BoolVar(&projectStruct.StaticAssets, "s", false, "Project will have static assets or not")
+	appFlagSet.BoolVar(&projectStruct.StaticAssets, "s", false, "Project will have statics assets or not")
 	appFlagSet.BoolVar(&appLogVerbose, "v", false, "verbose")
 
 	return *appFlagSet
