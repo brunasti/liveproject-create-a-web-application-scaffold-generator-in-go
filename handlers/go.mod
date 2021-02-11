@@ -1,3 +1,3 @@
-module brunasti.it/handlers
+module {{.Path}}/{{.Name}}
 
 go 1.16

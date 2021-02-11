@@ -6,6 +6,19 @@ import (
 	"net/http"
 )
 
+func serveContent(writer http.ResponseWriter, request *http.Request) {
+	log.Printf("[%v]\n", request.URL.Path)
+	p := request.URL.Path
+	if p == "/" {
+		p = "./public/index.html"
+	} else {
+		p = "./public" + p
+	}
+
+	log.Printf("Serving content [%v]\n", p)
+	http.ServeFile(writer, request, p)
+}
+
 func main() {
 	fmt.Println(appName + " ------------")
 
@@ -34,17 +47,4 @@ func healthCheck(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		log.Printf("/healthcheck - Error processing [%v][%d]\n", err, n)
 	}
-}
-
-func serveContent(writer http.ResponseWriter, request *http.Request) {
-	log.Printf("[%v]\n", request.URL.Path)
-	p := request.URL.Path
-	if p == "/" {
-		p = "./public/index.html"
-	} else {
-		p = "./public" + p
-	}
-
-	log.Printf("Serving content [%v]\n", p)
-	http.ServeFile(writer, request, p)
 }

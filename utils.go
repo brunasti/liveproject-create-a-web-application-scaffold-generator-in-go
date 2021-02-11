@@ -45,15 +45,15 @@ func copyFile(origin string, target string) {
 
 	defer original.Close()
 
-	// Create new file
-	new, err := os.Create(target)
+	// Create newFile file
+	newFile, err := os.Create(target)
 	exitOnError(err)
-	logVerbose(fmt.Sprintf("     Opened %s", new.Name()))
+	logVerbose(fmt.Sprintf("     Opened %s", newFile.Name()))
 
-	defer new.Close()
+	defer newFile.Close()
 
 	//This will copy
-	bytesWritten, err := io.Copy(new, original)
+	bytesWritten, err := io.Copy(newFile, original)
 	exitOnError(err)
 
 	logVerbose(fmt.Sprintf("     Bytes Written: %d", bytesWritten))
@@ -80,7 +80,7 @@ func writeFile(target string, content string) {
 
 // TODO test
 // Write a template into a file
-func writeTemplate(origin string, target string, content string) {
+func writeTemplate(origin string, target string, content projectStructureType) {
 	logVerbose(fmt.Sprintf("  - Template %s - Write %s", origin, target))
 
 	f, err := os.Create(target)
