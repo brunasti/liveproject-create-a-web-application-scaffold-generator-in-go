@@ -44,6 +44,7 @@ func application(projectStruct projectStructureType) int {
 
 	res := createScaffoldDirs(projectStruct)
 	res = generateScaffoldCommon(projectStruct)
+	res = generateScaffoldStatic(projectStruct)
 
 	return res
 }
