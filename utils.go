@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -26,29 +28,27 @@ func logVerbose(msg string) {
 }
 
 // TODO test
-func createSubdir(base string, new string) string {
-	newpath := filepath.Join(base, new)
-	logVerbose(fmt.Sprintf("  - path: %s", newpath))
+func createSubdir(base string, target string, header string) string {
+	newpath := filepath.Join(base, target)
+	logVerbose(fmt.Sprintf("%s  createSubdir - path: %s", header, newpath))
 	os.MkdirAll(newpath, os.ModePerm)
 	return newpath
 }
 
 // TODO test
 // Copy a file
-func copyFile(origin string, target string) {
-	logVerbose(fmt.Sprintf("  - Copy %s to %s", origin, target))
+func copyFile(origin string, target string, header string) {
+	logVerbose(fmt.Sprintf("%s  - Copy %s to %s", header, origin, target))
 
 	// Open original file
 	original, err := os.Open(origin)
 	exitOnError(err)
-	logVerbose(fmt.Sprintf("     Opened %s", origin))
 
 	defer original.Close()
 
 	// Create newFile file
 	newFile, err := os.Create(target)
 	exitOnError(err)
-	logVerbose(fmt.Sprintf("     Opened %s", newFile.Name()))
 
 	defer newFile.Close()
 
@@ -56,26 +56,9 @@ func copyFile(origin string, target string) {
 	bytesWritten, err := io.Copy(newFile, original)
 	exitOnError(err)
 
-	logVerbose(fmt.Sprintf("     Bytes Written: %d", bytesWritten))
-}
-
-// TODO test
-// Write into a file
-func writeFile(target string, content string) {
-	logVerbose(fmt.Sprintf("  - Write %s", target))
-
-	f, err := os.Create(target)
-	exitOnError(err)
-	defer f.Close()
-
-	w := bufio.NewWriter(f)
-	bytesWritten, err := w.WriteString(content)
-	exitOnError(err)
-
-	w.Flush()
-	f.Close()
-
-	logVerbose(fmt.Sprintf("     Bytes Written: %d", bytesWritten))
+	if bytesWritten < 0 {
+		logVerbose(fmt.Sprintf("%s     Error copyng file %s : %d", header, newFile.Name(), bytesWritten))
+	}
 }
 
 // TODO test
@@ -95,4 +78,42 @@ func writeTemplate(origin string, target string, content projectStructureType) {
 
 	w.Flush()
 	f.Close()
+}
+
+func getHeader(length int) string {
+	var res = ""
+	for i := 0; i < length; i++ {
+		res = res + " "
+	}
+	return res
+}
+
+// TODO test
+// Copy all the files in a directory
+func copyDir(origin string, target string, depth int) int {
+	var header = getHeader(depth * 2)
+	logVerbose(fmt.Sprintf("%s  - Copy files from dir %s to dir %s", header, origin, target))
+
+	files, err := ioutil.ReadDir(origin)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var i = 0
+	for _, f := range files {
+		if f.IsDir() {
+			//logVerbose(fmt.Sprintf("%s     Dir  : %s",header,  f.Name()))
+			createSubdir(target, f.Name(), header)
+			i = i + copyDir(origin+"/"+f.Name(), target+"/"+f.Name(), depth+1)
+
+		} else {
+			i++
+			//logVerbose(fmt.Sprintf("%s     File : %s",header,  f.Name()))
+			copyFile(origin+"/"+f.Name(), target+"/"+f.Name(), header)
+		}
+	}
+
+	logVerbose(fmt.Sprintf("%s     Files copied : %d", header, i))
+
+	return i
 }
