@@ -9,13 +9,101 @@ import (
 var testCounter = 0
 var testSuccess = 0
 
+type generatedObject struct {
+	directory bool
+	found     bool
+}
+
+type generatedContent struct {
+	tokens string
+	found  bool
+}
+
+var generatedObjects = map[string]generatedObject{
+	"handlers":              {true, false},
+	"handlers/constants.go": {false, false},
+	"handlers/go.mod":       {false, false},
+	"handlers/handlers.go":  {false, false},
+}
+
+var generatedStaticObjects = map[string]generatedObject{
+	"handlers/statics":                               {true, false},
+	"handlers/statics/css":                           {true, false},
+	"handlers/statics/fonts":                         {true, false},
+	"handlers/statics/js":                            {true, false},
+	"handlers/statics/index.html":                    {false, false},
+	"handlers/statics/test.html":                     {false, false},
+	"handlers/statics/css/bootstrap.min.css":         {false, false},
+	"handlers/statics/css/login.css":                 {false, false},
+	"handlers/statics/fonts/fontawesome-webfont.svg": {false, false},
+	"handlers/statics/js/bootstrap.min.js":           {false, false},
+}
+
+var generatedContents = map[string]generatedContent{
+	"handlers/constants.go": {"const appName", false},
+	"handlers/go.mod":       {"go 1.16", false},
+}
+
+func checkObjects(m map[string]generatedObject, tempDir string) (bool, string) {
+	objectsError := false
+	errorsList := ""
+	// Check if dirs & files exists
+	for n, t := range m {
+		fmt.Println(fmt.Sprintf("Object to check : %v - dir:%v ", n, t.directory))
+		if t.directory {
+			if _, err := os.Stat(tempDir + "/" + n); os.IsNotExist(err) {
+				// path/to/whatever does not exist
+				t.found = false
+				objectsError = true
+				errorsList = errorsList + fmt.Sprintf("[dir: %v] ", n)
+			} else {
+				t.found = true
+			}
+		} else {
+			if _, err := os.Stat(tempDir + "/" + n); os.IsNotExist(err) {
+				// path/to/whatever does not exist
+				t.found = false
+				objectsError = true
+				errorsList = errorsList + fmt.Sprintf("[file: %v] ", n)
+			} else {
+				t.found = true
+			}
+		}
+	}
+
+	return objectsError, errorsList
+}
+
+func checkContents(m map[string]generatedContent, tempDir string) (bool, string) {
+	objectsError := false
+	errorsList := ""
+	// Check if dirs & files exists
+	for n, t := range m {
+		fmt.Println(fmt.Sprintf("Content to check : %v - Content:%v ", n, t.tokens))
+		if !IsExistInFile(t.tokens, tempDir+"/"+n) {
+			// path/to/whatever does not exist
+			t.found = false
+			objectsError = true
+			errorsList = errorsList + fmt.Sprintf("[file: %v - content: (%v)] ", n, t.tokens)
+		} else {
+			t.found = true
+		}
+	}
+
+	return objectsError, errorsList
+}
+
+// --------------------------------------------------
+
 func TestApplication(t *testing.T) {
 	testCounter++
 
 	t.Run(fmt.Sprintf("should return errorCode 0"), func(t *testing.T) {
+		tempDir := t.TempDir() + "/path"
+		fmt.Println("TempDir : " + tempDir)
 		ps := projectStructureType{
 			Name:          "name",
-			Path:          "path",
+			Path:          tempDir,
 			RepositoryURL: "rep",
 			StaticAssets:  false,
 		}
@@ -23,6 +111,53 @@ func TestApplication(t *testing.T) {
 		if res != 0 {
 			t.Fatalf("Expected %d return code, but got %d instead", 0, res)
 		}
+
+		objectsError, errorsList := checkObjects(generatedObjects, tempDir)
+
+		if objectsError {
+			t.Fatalf("Some of the expected objects were not created %v", errorsList)
+		}
+
+		objectsError, errorsList = checkContents(generatedContents, tempDir)
+
+		if objectsError {
+			t.Fatalf("Some of the expected contents were not found %v", errorsList)
+		}
+
+	})
+
+	if !t.Failed() {
+		testSuccess++
+	}
+}
+
+func TestApplicationStatic(t *testing.T) {
+	testCounter++
+
+	t.Run(fmt.Sprintf("should return errorCode 0"), func(t *testing.T) {
+		tempDir := t.TempDir() + "/path"
+		fmt.Println("TempDir : " + tempDir)
+		ps := projectStructureType{
+			Name:          "name",
+			Path:          tempDir,
+			RepositoryURL: "rep",
+			StaticAssets:  true,
+		}
+		res := application(ps)
+		if res != 0 {
+			t.Fatalf("Expected %d return code, but got %d instead", 0, res)
+		}
+
+		objectsError, errorsList := checkObjects(generatedObjects, tempDir)
+		if objectsError {
+			t.Fatalf("Some of the expected objects were not created %v", errorsList)
+		}
+
+		objectsError, errorsList = checkObjects(generatedStaticObjects, tempDir)
+		if objectsError {
+			t.Fatalf("Some of the expected static objects were not created %v", errorsList)
+		}
+
 	})
 
 	if !t.Failed() {

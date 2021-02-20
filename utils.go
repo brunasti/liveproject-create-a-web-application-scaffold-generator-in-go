@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 )
 
 // exitOnError prints any errors and exits.
@@ -116,4 +117,17 @@ func copyDir(origin string, target string, depth int) int {
 	logVerbose(fmt.Sprintf("%s     Files copied : %d", header, i))
 
 	return i
+}
+
+func IsExistInFile(str, filepath string) bool {
+	b, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		panic(err)
+	}
+
+	isExist, err := regexp.Match(str, b)
+	if err != nil {
+		panic(err)
+	}
+	return isExist
 }
